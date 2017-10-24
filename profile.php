@@ -1,3 +1,29 @@
+<?php
+
+session_start();
+if(!isset($_SESSION['user_id'])){
+  header("location:http://banati.thecompletewebhosting.com/Notes-App/index.php");
+  
+}
+
+include("connection.php");
+$user_id = $_SESSION['user_id'];
+
+$sql = "SELECT * FROM users WHERE users_id = '$user_id'";
+$result = mysqli_query($link, $sql);
+$count = mysqli_num_rows($result);
+if($count == 1){
+   $row = mysqli_fetch_array($result, MYSQL_ASSOC);
+   $username = $row['username'];
+   $email = $row['email'];
+
+}
+else{
+    echo "There was a problem retrieving username and email from db";
+}
+
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -28,15 +54,15 @@
     </div>
     <div class="collapse navbar-collapse" id="NotesNavbar">
     <ul class="nav navbar-nav">
-      <li ><a href="#">Home</a></li>
+      <li class="active"><a href="http://banati.thecompletewebhosting.com/Notes-App/profile.php">Profile</a></li>
       <li><a href="#">Help</a></li>
       <li><a href="#">Contact Us</a></li>
-      <li ><a href="#">My Notes</a></li>
+      <li ><a href="http://banati.thecompletewebhosting.com/Notes-App/notesDisplay.php">My Notes</a></li>
 
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li class="active"><a href = "#">Logged in as <b>Arpit Banati</b></a></li>
-      <li><a href = "#">Log out</a></li>
+      <li class="active"><a href = "#">Logged in as <b><?php echo $username; ?></b></a></li>
+      <li><a href = "http://banati.thecompletewebhosting.com/Notes-App/index.php?logout=1">Log out</a></li>
     </ul>
     </div>
   </div>
@@ -50,11 +76,11 @@
         <table class="table table-condensed table-hover table-bordered settingsTable">
           <tr data-toggle = "modal" data-target = "#editusernameModal">
             <td>Username</td>
-            <td>Arpit Banati <span class="edit pull-right"><i class="fa fa-pencil"></i></span></td>
+            <td><?php echo $username; ?><span class="edit pull-right"><i class="fa fa-pencil"></i></span></td>
           </tr>
           <tr data-toggle = "modal" data-target = "#editemailModal">
             <td>Email</td>
-            <td>banatiarpit97@yahoo.co.in <span class="edit pull-right"><i class="fa fa-pencil"></i></span></td>
+            <td><?php echo $email; ?><span class="edit pull-right"><i class="fa fa-pencil"></i></span></td>
           </tr >
           <tr data-toggle = "modal" data-target = "#editpasswordModal">
             <td>Password</td>
@@ -76,14 +102,15 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Edit Username:</h4>
       </div>
-      <form class="" method="post">
+      <form id = "updateusername" method="post">
       <div class="modal-body">
+        <div id="updateusernamemessage"></div>
         <div class="form-group">
-          <input type="text" name="editUsername" placeholder="New Username" class="form-control">
+          <input type="text" name="editUsername" placeholder="New Username" class="form-control" value="<?php echo $username; ?>">
         </div>
       </div>
       <div class="modal-footer">
-        <input type="submit" name="editUsername" value="Submit" class="btn signup">
+        <input type="submit" name="editUsernameBtn" value="Submit" class="btn signup">
         <input type="button" name="cancel" value="Cancel" class="btn btn-default">
       </div>
       </form>
@@ -102,14 +129,16 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Edit Email Address:</h4>
       </div>
-      <form class="" method="post">
+      <form id="updateemail" method="post">
       <div class="modal-body">
+        <div id="updateemailmessage"></div>
+
         <div class="form-group">
-          <input type="text" name="editEmail" placeholder="New Email Address" class="form-control">
+          <input type="text" name="editEmail" placeholder="New Email Address" class="form-control" value="<?php echo $email; ?>">
         </div>
       </div>
       <div class="modal-footer">
-        <input type="submit" name="editEmail" value="Submit" class="btn signup">
+        <input type="submit" name="editEmailBtn" value="Submit" class="btn signup">
         <input type="button" name="cancel" value="Cancel" class="btn btn-default">
       </div>
       </form>
@@ -128,16 +157,18 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Edit Password:</h4>
       </div>
-      <form class="" method="post">
+      <form id="updatepassword" method="post">
       <div class="modal-body">
+        <div id="updatepasswordmessage"></div>
+
         <div class="form-group">
-          <input type="text" name="oldPassword" placeholder="Current Password" class="form-control">
+          <input type="password" name="oldPassword" placeholder="Current Password" class="form-control">
         </div>
         <div class="form-group">
-          <input type="text" name="newPassword" placeholder="New Password" class="form-control">
+          <input type="password" name="newPassword" placeholder="New Password" class="form-control">
         </div>
         <div class="form-group">
-          <input type="text" name="confirmNewPassword" placeholder="Confirm New Password" class="form-control">
+          <input type="password" name="confirmNewPassword" placeholder="Confirm New Password" class="form-control">
         </div>
       </div>
       <div class="modal-footer">
@@ -170,6 +201,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="profile.js"></script>
   <!--Script FIles included here -->
 </body>
 

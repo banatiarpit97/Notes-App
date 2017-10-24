@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+include('connection.php');
+include('logout.php');
+include('remember.php');
+echo "<div class = 'alert alert-danger' style='margin-top:100px'><b>".$_COOKIE['rememberme']."</b></div>";
+
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -135,10 +145,12 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Forgot Password? Enter your Email Address</h4>
       </div>
-      <form class="" method="post">
+      <form class="" method="post" id="forgotpassword">
       <div class="modal-body">
+        <div id="forgotpassworderror"></div>
+
         <div class="form-group">
-          <input type="email" name="loginEmail" value="" placeholder="Enter Email Address" class="form-control">
+          <input type="email" name="forgotpasswordEmail" value="" placeholder="Enter Email Address" class="form-control">
         </div>
 
       </div>

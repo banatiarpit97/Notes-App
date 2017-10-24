@@ -149,7 +149,7 @@
 .buttons{
   margin-bottom: 20px;
 }
-.notepad textarea{
+textarea{
   width: 100%;
   max-width: 100%;
   font-size: 16px;

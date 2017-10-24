@@ -40,3 +40,21 @@ $.ajax({
 });
 
 });
+
+$("#forgotpassword").submit(function(event){
+	event.preventDefault();
+	var datatopost = $(this).serializeArray();
+
+$.ajax({
+	url: "forgotpassword.php",
+	type: "POST",
+	data: datatopost,
+	success: function(data){
+			$("#forgotpassworderror").html(data);
+	},
+	error: function(){
+	    $("#forgotpassworderror").html("<div class = 'alert alert-danger'>There was an error with the ajax call.Please try again later</div>");	
+	}
+});
+
+});

@@ -1,3 +1,31 @@
+<?php
+
+session_start();
+if(!isset($_SESSION['user_id'])){
+  header("location:http://banati.thecompletewebhosting.com/Notes-App/index.php");
+
+}
+// echo "<div class = 'alert alert-danger' style='margin-top:100px'><b>".$_COOKIE['rememberme']."</b></div>";
+
+include("connection.php");
+$user_id = $_SESSION['user_id'];
+
+$sql = "SELECT * FROM users WHERE users_id = '$user_id'";
+$result = mysqli_query($link, $sql);
+$count = mysqli_num_rows($result);
+if($result == 1){
+   $row = mysqli_fetch_array($result, MYSQL_ASSOC);
+   $username = $row['username'];
+   $email = $row['email'];
+
+}
+else{
+    echo "There was a problem retrieving username and email from db";
+}
+
+?>
+
+
 <!doctype html>
 <html lang="en">
 
@@ -11,6 +39,30 @@
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+
+    <style>
+      .noteheader{
+        border:1px solid grey;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        padding: 0 10px;
+        background: linear(#fff, #ECEAE7);
+      }
+      .text{
+        font-size: 20px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .timetext{
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    </style>
+
+
 </head>
 
 <body ng-app = "notesApp" ng-controller = "EditDetails">
@@ -28,32 +80,37 @@
     </div>
     <div class="collapse navbar-collapse" id="NotesNavbar">
     <ul class="nav navbar-nav">
-      <li ><a href="#">Home</a></li>
+      <li ><a href="http://banati.thecompletewebhosting.com/Notes-App/profile.php">Profile</a></li>
       <li><a href="#">Help</a></li>
       <li><a href="#">Contact Us</a></li>
       <li class="active"><a href="#">My Notes</a></li>
 
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li><a href = "#">Logged in as <b>Arpit Banati</b></a></li>
-      <li><a href = "#">Log out</a></li>
+      <li><a href = "#">Logged in as <b><?php echo $username; ?></b></a></li>
+      <li><a href = "http://banati.thecompletewebhosting.com/Notes-App/index.php?logout=1">Log out</a></li>
     </ul>
     </div>
   </div>
 </nav>
 
 <div class="container notesDislay">
+  <div id="alert" class="alert alert-danger collapse">
+    <a class="close" data-dismiss="alert">&times;</a>
+    <p class="alertContent"></p>
+  </div>
   <div class="row">
     <div class="col-md-offset-2 col-md-8">
       <div class="buttons">
         <button type="button" id ="addnote" class="btn btn-info btn-lg">Add Note</button>
-        <button type="button" id ="edit" class="btn btn-info btn-lg pull-right">Edit</button>
-        <button type="button" id ="done" class="btn btn-lg pull-right hidden">Done</button>
-        <button type="button" id ="allnotes" class="btn btn-info btn-lg hidden">All Notes</button>
+        <button type="button" id ="edit" class="btn btn-info btn-lg pull-right">Delete</button>
+        <button type="button" id ="done" class="btn btn-lg pull-right">Done</button>
+        <button type="button" id ="allnotes" class="btn btn-info btn-lg">All Notes</button>
       </div>
-      <div class="notepad">
+      <div id="notepad">
         <textarea rows="10"></textarea>
       </div>
+      <div id="notes" class="notes"></div>
     </div>
   </div>
 </div>
@@ -70,6 +127,9 @@
 
   <!--Script FIles included here -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+      $("#notepad, #done, #allnotes").hide();
+  </script>
   <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
@@ -77,7 +137,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src = "mynotes.js"></script>
   <!--Script FIles included here -->
+
 </body>
 
 </html>
