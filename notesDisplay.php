@@ -5,7 +5,6 @@ if(!isset($_SESSION['user_id'])){
   header("location:http://banati.thecompletewebhosting.com/Notes-App/index.php");
 
 }
-// echo "<div class = 'alert alert-danger' style='margin-top:100px'><b>".$_COOKIE['rememberme']."</b></div>";
 
 include("connection.php");
 $user_id = $_SESSION['user_id'];
@@ -22,6 +21,8 @@ if($result == 1){
 else{
     echo "There was a problem retrieving username and email from db";
 }
+
+include('logout.php');
 
 ?>
 

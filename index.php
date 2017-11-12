@@ -3,8 +3,21 @@ session_start();
 
 include('connection.php');
 include('logout.php');
-include('remember.php');
-echo "<div class = 'alert alert-danger' style='margin-top:100px'><b>".$_COOKIE['rememberme']."</b></div>";
+
+if((isset($_COOKIE['user_id']))&&(isset($_COOKIE['username']))&&(isset($_COOKIE['password']))){
+  $id = $_COOKIE['user_id'];
+  $username = $_COOKIE['username'];
+  $password = $_COOKIE['password'];
+  $sql = "SELECT * FROM users WHERE users_id='$id' AND username = '$username' AND password = '$password'";
+  $result = mysqli_query($link, $sql);
+  $count = mysqli_num_rows($result);
+  if($count == 1){
+    $_SESSION['user_id'] = $id;
+     header("location:http://banati.thecompletewebhosting.com/Notes-App/notesDisplay.php");
+
+  }
+}
+// include('remember.php');
 
 ?>
 
